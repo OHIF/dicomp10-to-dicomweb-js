@@ -168,6 +168,8 @@ const getValue = async (dataSet, attr, vr, getDataSet, callback, options) => {
             if( subResult.metadata ) result.push(subResult.metadata);
         }
         return result
+    } else if( attr.Value ) {
+        return attr.Value;
     } else {
         // non sequence item
         if(isValueInline(attr,options) ) {
