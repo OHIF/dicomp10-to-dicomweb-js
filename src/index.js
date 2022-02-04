@@ -128,7 +128,9 @@ class StaticWado {
 
         const studyInstanceUid = dataSet.string('x0020000d')
 
-        if (!studyInstanceUid) return;
+        if (!studyInstanceUid) {
+            throw new Error(`Can't import dataSet ${dataSet}`);
+        }
 
         // Extract uids
         const id = this.callback.uids({
