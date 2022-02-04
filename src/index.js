@@ -187,6 +187,4 @@ class StaticWado {
     }
 }
 
-new StaticWado({});
-
 module.exports = StaticWado
