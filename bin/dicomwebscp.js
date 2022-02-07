@@ -124,7 +124,7 @@ class DcmjsDimseScp extends Scp {
 
       this.importer.importBinaryDicom(importDs, params).then(value => {
         response.setStatus(Status.Success);
-        Stats.StudyStats.add('Receive DICOM', `Receive DICOM instance`, 250);
+        Stats.StudyStats.add('Receive DICOM', `Receive DICOM instance`);
         callback(response);
 
       }).catch(rejected => {
