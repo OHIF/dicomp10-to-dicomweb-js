@@ -46,8 +46,15 @@ Install the CLI with either npm install -g .  or npm install -g dicomp10-to-dico
 There are 5 different commands: mkdicomweb, mkdicomwebinstances, mkdicomwebstudy, mkdicomwebdeduplicated, mkdicomwebdeduplicatedgroup that can be used (see usage bellow). It can be run as:
 
 ```
-commnadName [options]
+commnadName [options] [<input...>]
 ```
+
+Arguments are:
+
+input
+ : List of directories/files separated by space.
+ Required for commands: **mkdicomweb**, **mkdicomwebdeduplicated**, **mkdicomwebinstances**. Optional for the others. This argument should be placed at end of command invoking.
+
 The options are:
 
   -c, --clean
@@ -62,14 +69,7 @@ The options are:
   -g, --group 
   : Write combined deduplicate data (default: true)
   
-  -h, --help
-  : Print help (default: false)
-  
-  -i, --input <input...>
-  : List of files/directories/studyUids to be processed (default: [])
-  Required for commands: **mkdicomweb**, **mkdicomwebdeduplicated**, **mkdicomwebinstances**
-  
-  -I, --instances
+  -i, --instances
   : Write instance metadata (default: false)
   
   -m, --maximum-inline-public-length <value>
@@ -110,24 +110,36 @@ The options are:
   -V, --version
   : output the version number
 
+### Help command
+You can output help information by:
+```
+commandName help
+```
 
+```
+commandName -h
+```
+
+```
+commandName --help
+```
 
 ### To create instances
 Run the tool:
 ```
-mkdicomwebinstances -i <directoryOfP10Files>
+mkdicomwebinstances <directoryOfP10Files>
 ```
 
 ### To create a full DICOMweb output structure
 Run the tool:
 ```
-mkdicomweb -i <directoryOfP10Files>
+mkdicomweb <directoryOfP10Files>
 ```
 
 ### To run separated stages
 The mkdicomweb tool runs the three stages all together, on just the studies references.  This can instead be done on separate files by running:
 ```
-mkdicomwebdeduplicated -i <directoryOfP10Files>
+mkdicomwebdeduplicated  <directoryOfP10Files>
 mkdicomwebdeduplicatedgroup
 mkdicomwebstudy
 ```
@@ -162,26 +174,26 @@ It allows commands to recompress data/metadata prior writing it to local. Curren
 
 By default the recompression occurs for incoming types: uncompressed, jp2
 ```
-mkdicomweb -i ./folderName
+mkdicomweb ./folderName
 ```
 It will recompress any existing data that transfers syntaxes are 1.2.840.10008.1.2.4.90, 1.2.840.10008.1.2.4.91, 1.2.840.10008.1.2, 1.2.840.10008.1.2.1 and 1.2.840.10008.1.2.2.
 
 
 Define incoming types for recompression of: uncompressed,jp2,rle
 ```
-mkdicomweb -i ./folderName -r uncompressed jp2 rle
+mkdicomweb  -r uncompressed jp2 rle ./folderName
 ```
 It will recompress any existing data that transfers syntaxes: 1.2.840.10008.1.2.4.90, 1.2.840.10008.1.2.4.91, 1.2.840.10008.1.2, 1.2.840.10008.1.2.1, 1.2.840.10008.1.2.2 and 1.2.840.10008.1.2.5 to transfer syntax 1.2.840.10008.1.2.4.80.
 
 Force no recompression
 ```
-mkdicomweb -i ./folderName -r uncompressed jp2 rle --no-recompress
+mkdicomweb  -r uncompressed jp2 rle --no-recompress ./folderName
 ```
 It will NOT recompress any existing data but instead it will keep them in the original encoding.
 
 Force no recompression
 ```
-mkdicomweb -i ./folderName --no-recompress
+mkdicomweb --no-recompress ./folderName
 ```
 It will NOT recompress any existing data but instead it will keep them in the original encoding.
 

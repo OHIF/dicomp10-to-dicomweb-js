@@ -11,8 +11,8 @@ const uncompressed = {
 const jpeg = "image/jpeg";
 const jls = "image/jls";
 const jll = "image/jll";
-const jxl = "image/jxl";
-const htj2k = "image/htj2k";
+const jxl = "image/x-jxl";
+const htj2k = "image/x-htj2k";
 const jp2 = "image/jp2";
 const rle = "image/dicom-rle";
 

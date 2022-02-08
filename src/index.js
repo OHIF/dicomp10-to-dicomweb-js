@@ -34,7 +34,7 @@ class StaticWado {
 
       const { scanStudies } = defaults;
 
-      // Extract program variables
+      // Configure program commander
       const program = configureProgram(defaults);
 
       const {
@@ -53,8 +53,9 @@ class StaticWado {
         pathInstances,
         removeDeduplicatedInstances,
         verbose,
-        input: files,
       } = program.opts();
+
+      
 
       dicomCodec.setConfig({ verbose });
 
@@ -80,7 +81,9 @@ class StaticWado {
         verbose,
       };
 
-        this.callback = {
+      // currently there is only one type of args, so all arg values mean input data (directories/files)
+      this.input = program.args;
+      this.callback = {
             uids: IdCreator(this.options),
             bulkdata: HashDataWriter(this.options),
             imageFrame: ImageFrameWriter(this.options),
@@ -189,9 +192,9 @@ class StaticWado {
     async main() {
         if (this.options.scanStudies) {
             // Scan one of the study directories - in this case, files is a set of study directories
-            await this.processStudyDir(this.files, this.options);
+            await this.processStudyDir(this.input, this.options);
         } else {
-            await this.processFiles(this.files, this.options);
+            await this.processFiles(this.input, this.options);
         }
         await this.close();
     }

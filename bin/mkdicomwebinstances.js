@@ -6,7 +6,7 @@ const defaults = {
     isStudyData: false,
     isInstanceMetadata: true,
     clean: true,
-    optionsRequired: ['-i'],
+    argumentsRequired: ['input'],
     helpShort: 'mkdicomwebinstances',
     helpDescription: 'Takes DICOM part 10 files and writes the bulkdata/instance metadata.',
 };

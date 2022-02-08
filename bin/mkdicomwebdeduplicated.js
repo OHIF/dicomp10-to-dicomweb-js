@@ -6,7 +6,7 @@ const defaults = {
   isStudyData: false,
   isGroup: false,
   isDeduplicate: true,
-  optionsRequired: ["-i"],
+  argumentsRequired: ['input'],
   helpShort: "mkdicomwebdeduplicated",
   helpDescription:
     "Makes deduplicated instance level files from a set of DICOM part 10 files.\n" +

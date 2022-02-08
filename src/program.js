@@ -1,4 +1,4 @@
-const { program } = require("commander");
+const { program, Argument } = require("commander");
 const package = require("../package.json");
 
 const dicomwebDefaultDir = "~/dicomweb";
@@ -11,12 +11,34 @@ program.version(package.version);
  * @returns Program object
  */
 function configureProgram(configuration) {
-  const { helpDescription, helpShort, optionsRequired = [] } = configuration;
+  const {
+    helpDescription,
+    helpShort,
+    argumentsRequired = [],
+    optionsRequired = [],
+  } = configuration;
 
   program
     .name(helpShort)
     .configureHelp({ sortOptions: true })
-    .addHelpText("beforeAll", helpDescription);
+    .addHelpText("beforeAll", helpDescription)
+    .addHelpCommand();
+
+  const argumentList = [
+    {
+      key: "<input...>",
+      description: "List of files/directories/studyUids to be processed",
+    },
+  ];
+
+  // program command options
+  argumentsRequired.forEach((argName) => {
+    argumentList.forEach((argObject) => {
+      if (argObject.key.includes(argName)) {
+        program.addArgument(new Argument(argObject.key, argObject.description));
+      }
+    });
+  });
 
   // program command options
   const options = [
@@ -36,12 +58,7 @@ function configureProgram(configuration) {
       defaultValue: configuration.isGroup || false,
     },
     {
-      key: "-h, --help",
-      description: "Print help",
-      defaultValue: false,
-    },
-    {
-      key: "-I, --instances",
+      key: "-i, --instances",
       description: "Write instance metadata",
       defaultValue: configuration.isInstanceMetadata || false,
     },
@@ -135,10 +152,6 @@ function configureProgram(configuration) {
   });
 
   program.parse();
-
-  if (program.opts().help) {
-    program.help();
-  }
 
   return program;
 }
