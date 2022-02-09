@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const { main } = require("../src");
+const { configureProgram } = require("../src/program");
 
 const defaults = {
   isStudyData: true,
@@ -12,6 +13,10 @@ const defaults = {
     "deduplicated files each time a study instance UID is found, and only updates those studies\n" +
     "having at least one ",
 };
+
+// Configure program commander
+configureProgram(defaults);
+
 main(defaults).then(() => {
   console.log("done");
 });

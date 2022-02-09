@@ -1,6 +1,7 @@
 #! /usr/bin/env node
 
 const { main } = require("../src");
+const { configureProgram } = require("../src/program");
 
 const defaults = {
   isStudyData: false,
@@ -12,6 +13,10 @@ const defaults = {
     "Makes sets of deduplicated instances out of the single instance deduplicated data.\n" +
     "Scans the dicomweb/instances directory to find data, then deletes it by default.",
 };
+
+// Configure program commander
+configureProgram(defaults);
+
 main(defaults).then(() => {
   console.log("done");
 });

@@ -1,4 +1,6 @@
-const dicomParser = require('dicom-parser')
+const dicomCodec = require('@cornerstonejs/dicom-codec');
+const dicomParser = require('dicom-parser');
+const { program } = require("commander");
 const asyncIterableToBuffer = require('./asyncIterableToBuffer')
 const getDataSet = require('./getDataSet')
 const JSONWriter = require('./JSONWriter')
@@ -21,21 +23,15 @@ const {
   transcodeId,
   transcodeMetadata,
 } = require("./transcodeImage");
-const configureProgram = require("./program");
-
 
 const OverallStats = new Stats('OverallStats', 'Overall statistics');
 const StudyStats = new Stats('StudyStats', 'Study Generation', OverallStats);
 const handleHomeRelative = dirName => dirName[0] == '~' ? (path.join(homedir, dirName.substring(1))) : dirName;
 
-
 class StaticWado {
     constructor(defaults) {
 
       const { scanStudies } = defaults;
-
-      // Configure program commander
-      const program = configureProgram(defaults);
 
       const {
         maximumInlinePublicLength,
@@ -54,8 +50,6 @@ class StaticWado {
         removeDeduplicatedInstances,
         verbose,
       } = program.opts();
-
-      
 
       dicomCodec.setConfig({ verbose });
 
@@ -152,12 +146,12 @@ class StaticWado {
             transferSyntaxUid: dataSet.string('x00020010')
         });
 
-        const targetId = transcodeId(id, options);
+        const targetId = transcodeId(id, this.options);
 
         let bulkDataIndex = 0;
         let imageFrameIndex = 0;
         const generator = {
-          bulkdata: async (bulkData) => callback.bulkdata(targetId, bulkDataIndex++, bulkData),
+          bulkdata: async (bulkData) => this.callback.bulkdata(targetId, bulkDataIndex++, bulkData),
           imageFrame: async (originalImageFrame) => {
             const { imageFrame, id: transcodedId } = await transcodeImageFrame(
               id,
@@ -167,9 +161,9 @@ class StaticWado {
               this.options
             );
 
-            return callback.imageFrame(transcodedId, imageFrameIndex++, imageFrame);
+            return this.callback.imageFrame(transcodedId, imageFrameIndex++, imageFrame);
           },
-          videoWriter: async (_dataSet) => callback.videoWriter(id, _dataSet)
+          videoWriter: async (_dataSet) => this.callback.videoWriter(id, _dataSet)
         };
 
         // convert to DICOMweb MetaData and BulkData
@@ -177,7 +171,7 @@ class StaticWado {
 
         const transcodedMeta = transcodeMetadata(result.metadata, id, this.options);
 
-        await callback.metadata(targetId, transcodedMeta);
+        await this.callback.metadata(targetId, transcodedMeta);
 
         // resolve promise with statistics
         return {};

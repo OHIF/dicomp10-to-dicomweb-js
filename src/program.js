@@ -5,17 +5,10 @@ const dicomwebDefaultDir = "~/dicomweb";
 
 program.version(package.version);
 
-/**
- * Configure commander program. Ideally it should be called just once.
- * @param {*} configuration Configuration object from command level
- * @returns Program object
- */
-function configureProgram(configuration) {
+function configureBaseProgram(configuration) {
   const {
     helpDescription,
     helpShort,
-    argumentsRequired = [],
-    optionsRequired = [],
   } = configuration;
 
   program
@@ -23,6 +16,39 @@ function configureProgram(configuration) {
     .configureHelp({ sortOptions: true })
     .addHelpText("beforeAll", helpDescription)
     .addHelpCommand();
+
+  return program;
+}
+
+/**
+ * Configure commander program. Ideally it should be called just once.
+ * Used by Dicomwebscp command (dicom web service class provider command).
+ * 
+ * @param {*} configuration Configuration object from command level
+ * @returns Program object
+ */
+function configureServerProgram(configuration) {
+  const _program = configureBaseProgram(configuration);
+  
+  // no options or arguments set yet
+  _program.parse();
+
+  return _program;
+}
+/**
+ * Configure commander program. Ideally it should be called just once.
+ * Used by StaticWado commands.
+ * 
+ * @param {*} configuration Configuration object from command level
+ * @returns Program object
+ */
+function configureProgram(configuration) {
+  const {
+    argumentsRequired = [],
+    optionsRequired = [],
+  } = configuration;
+
+  const _program = configureBaseProgram(configuration);
 
   const argumentList = [
     {
@@ -133,7 +159,7 @@ function configureProgram(configuration) {
   ];
 
   options.forEach(({ key, description, defaultValue, choices }) => {
-    const option = program.createOption(key, description);
+    const option = _program.createOption(key, description);
 
     option.default(defaultValue);
 
@@ -148,12 +174,13 @@ function configureProgram(configuration) {
       option.choices(choices);
     }
 
-    program.addOption(option);
+    _program.addOption(option);
   });
 
-  program.parse();
+  _program.parse();
 
-  return program;
+  return _program;
 }
 
-module.exports = configureProgram;
+exports.configureServerProgram = configureServerProgram;
+exports.configureProgram = configureProgram;
