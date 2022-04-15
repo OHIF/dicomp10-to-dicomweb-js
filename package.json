@@ -3,6 +3,7 @@
   "version": "0.4.0",
   "description": "Library to convert DICOMP10 to DICOMweb format. Original upstream: https://github.com/chafey/dicomp10-to-dicomweb-js",
   "main": "src/index.js",
+  "license": "MIT",
   "directories": {
     "doc": "docs"
   },
@@ -13,6 +14,7 @@
     "mkdicomwebinstances": "bin/mkdicomwebinstances.js",
     "mkdicomwebstudy": "bin/mkdicomwebstudy.js",
     "dicomwebscp": "bin/dicomwebscp.js",
+    "dicomwebserver": "bin/dicomwebserver.mjs",
     "staticwadojs": "bin/mkdicomweb.js"
   },
   "scripts": {
@@ -56,7 +58,9 @@
     "commander": "^8.3.0",
     "dcmjs-dimse": "^0.0.14",
     "dicom-parser": "^1.8.13",
+    "express": "^4.17.2",
     "hash-object": "^0.1.7",
+    "morgan": "^1.10.0",
     "node-object-hash": "^2.3.10",
     "object-hash": "^2.2.0"
   }
